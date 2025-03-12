@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<students>
+    <student>
+        <name>John Doe</name>
+        <hall_ticket_no>1</hall_ticket_no>
+        <dob>2000-01-01</dob>
+        <class>10</class>
+    </student>
+    <student>
+        <name>Jane Smith</name>
+        <hall_ticket_no>2</hall_ticket_no>
+        <dob>2001-05-15</dob>
+        <class>12</class>
+    </student>
+    <student>
+        <name>Samuel Green</name>
+        <hall_ticket_no>3</hall_ticket_no>
+        <dob>2002-08-30</dob>
+        <class>11</class>
+    </student>
+</students>

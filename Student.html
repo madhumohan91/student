@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Search</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Search Student Details</h1>
+        </header>
+
+        <div class="search-box">
+            <label for="hallTicketNo">Enter Hall Ticket Number:</label>
+            <input type="text" id="hallTicketNo" placeholder="Hall Ticket Number" autocomplete="off">
+            <button onclick="searchStudent()">Search</button>
+        </div>
+
+        <div class="result" id="studentDetails">
+            <!-- Student details will appear here -->
+        </div>
+    </div>
+
+    <script>
+        // Function to search student by hall ticket number
+        async function searchStudent() {
+            const hallTicketNo = document.getElementById("hallTicketNo").value;
+            const resultDiv = document.getElementById("studentDetails");
+
+            // Clear previous results
+            resultDiv.innerHTML = "";
+
+            if (!hallTicketNo) {
+                resultDiv.innerHTML = "<p>Please enter a Hall Ticket Number.</p>";
+                return;
+            }
+
+            try {
+                // Use the fetch API to load the XML file
+                const response = await fetch("student details.xml");
+
+                if (!response.ok) {
+                    throw new Error("Network response was not ok.");
+                }
+
+                const xmlText = await response.text();
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+
+                const students = xmlDoc.getElementsByTagName("student");
+                let found = false;
+
+                // Loop through each student and check if hall ticket matches
+                for (let i = 0; i < students.length; i++) {
+                    const hallTicket = students[i].getElementsByTagName("hall_ticket_no")[0].childNodes[0].nodeValue;
+
+                    if (hallTicket === hallTicketNo) {
+                        const name = students[i].getElementsByTagName("name")[0].childNodes[0].nodeValue;
+                        const dob = students[i].getElementsByTagName("dob")[0].childNodes[0].nodeValue;
+                        const studentClass = students[i].getElementsByTagName("class")[0].childNodes[0].nodeValue;
+
+                        resultDiv.innerHTML = `
+                            <h2>Student Details</h2>
+                            <div class="student-info">
+                                <p><strong>Name:</strong> ${name}</p>
+                                <p><strong>Hall Ticket Number:</strong> ${hallTicket}</p>
+                                <p><strong>Date of Birth:</strong> ${dob}</p>
+                                <p><strong>Class:</strong> ${studentClass}</p>
+                            </div>
+                        `;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    resultDiv.innerHTML = "<p>No student found with the provided Hall Ticket Number.</p>";
+                }
+
+            } catch (error) {
+                resultDiv.innerHTML = "<p>Error fetching student data. Please try again later.</p>";
+                console.error("Fetch Error: ", error);
+            }
+        }
+    </script>
+</body>
+</html>
